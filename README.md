@@ -1,45 +1,41 @@
-# Classify and Detoxify: Tackling Toxic Comments with RoBERTa and LLaMA
+# Classify & Detoxify
 
-![Detoxification Process Demo](https://github.com/user-attachments/assets/89129e03-7253-40ea-aa77-a1a4163d3303)
-![Model Pipeline Overview](https://github.com/user-attachments/assets/a523894a-802b-4a3f-986d-18f5bcf54c12)
+Rewrites toxic comments into polite ones instead of deleting them.
 
-## 👨‍💻 Team Members
+![Demo](https://github.com/user-attachments/assets/89129e03-7253-40ea-aa77-a1a4163d3303)
 
-| Name                  | Student ID | GitHub                              |
-|-----------------------|------------|-------------------------------------|
-| Nixon Castroman       | 5025231024 | [@XoXonn](https://github.com/XoXonn) |
-| Hans Sanjaya Yantono  | 5025231034 | [@hansits034](https://github.com/hansits034) |
+## How it works
 
----
+1. **Classify.** RoBERTa, fine-tuned from [`s-nlp/roberta_toxicity_classifier`](https://huggingface.co/s-nlp/roberta_toxicity_classifier), labels each comment as insult, threat, sexual harassment or non-toxic.
+2. **Rewrite.** Toxic comments go to LLaMA 3.1 8B, fine-tuned with QLoRA (4-bit, rank 16) through Unsloth, which rewrites them politely and keeps the intent.
+3. **Demo.** A multi-user chat room in Gradio.
 
-## 🧠 Project Overview
+![Pipeline](https://github.com/user-attachments/assets/a523894a-802b-4a3f-986d-18f5bcf54c12)
 
-This project presents a two-stage Natural Language Processing (NLP) system that performs:
+## Results
 
-1. **Toxic Comment Classification** — Detecting whether a comment contains toxicity and categorizing it (e.g., Insult, Threat, Sexual Harassment).
-2. **Comment Detoxification** — Rewriting toxic comments into more respectful, non-harmful alternatives, while preserving their original intent.
+| | |
+|---|---|
+| Classifier accuracy, held-out 20% | 94.5% |
+| Classifier weighted F1 | 0.945 |
+| Rewrites, ROUGE-L | 0.30 |
 
-We built and deployed the system using **Gradio** on **Google Colab**, and published our models on **Hugging Face** for public access.  
-Our goal is to foster healthier online communication by transforming offensive language rather than deleting it outright.
+People reading the rewrites preferred ours over baselines with higher ROUGE scores.
 
----
+## Files
 
-## 📄 Read the Full Story
+| File | What it does |
+|---|---|
+| `Classification(Transformer_RoBERTa).ipynb` | Fine-tunes the RoBERTa classifier |
+| `DetoxModel(unsloth_Meta_Llama_3_1_8B).ipynb` | Fine-tunes LLaMA 3.1 8B to rewrite toxic comments |
+| `DetoxDeploy.ipynb` | Runs the Gradio chat room |
+| `toxic_comment_dataset6k.csv` | Training data |
 
-Check out our detailed Medium article here:  
-🔗 [Classify and Detoxify: Tackling Toxic Comments with RoBERTa and LLaMA](https://medium.com/@nixoncastroman08/classify-and-detoxify-tackling-toxic-comments-with-roberta-and-llama-99754e127d94)
+The notebooks were written for Google Colab.
 
----
+## More
 
-## 📚 References
-
-- Original Detox Model: [s-nlp/detox](https://github.com/s-nlp/detox?source=post_page-----99754e127d94---------------------------------------)
-
----
-
-## 🧙‍♂️ Magic Spell
-![image](https://github.com/user-attachments/assets/8fd6b7a7-91ec-4657-82dd-f4ee8d1d5c29)
-> **"Avada Kedavra"** 👀  
-(But don’t worry — in our case, it’s reversed: we heal toxic comments instead of harming others.)
-
----
+- Case study: [nixoncastroman.github.io/work/classify-detoxify.html](https://nixoncastroman.github.io/work/classify-detoxify.html)
+- Write-up: [Medium](https://medium.com/@nixoncastroman08/classify-and-detoxify-tackling-toxic-comments-with-roberta-and-llama-99754e127d94)
+- Team: Nixon Castroman ([@XoXonn](https://github.com/XoXonn)), Hans Sanjaya Yantono ([@hansits034](https://github.com/hansits034))
+- Builds on [s-nlp/detox](https://github.com/s-nlp/detox)
